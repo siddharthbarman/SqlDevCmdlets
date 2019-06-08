@@ -1,0 +1,315 @@
+﻿<!--?xml version="1.0" encoding="utf-8" ?-->
+<helpitems xmlns="http://msh" schema="maml">
+	<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+		<command:details>
+			<command:name>Get-TableSql</command:name>
+			<maml:description>
+				<maml:para>Generates a table definiton based on the output of a query. The name of the table depends on the value specified using the OutputName.</maml:para>
+			</maml:description>
+			<command:verb>Get</command:verb>
+			<command:noun>TableSql</command:noun>
+		</command:details>
+    
+		<command:syntax>
+			<command:syntaxitem>
+				<maml:name>Get-TableSql</maml:name>
+				<command:parameter aliases="" pipelineinput="True" globbing="false" variablelength="true" required="true">
+					<maml:name>ConnectionString</maml:name>
+					<maml:description>
+						<maml:para>Connection string to the SQL Server.</maml:para>
+					</maml:description>
+					<command:parametervalue variablelength="true" required="true">System.String</command:parametervalue>
+				</command:parameter>
+				<command:parameter aliases="" pipelineinput="True" globbing="false" variablelength="true" required="true">
+					<maml:name>Query</maml:name>
+					<maml:description>
+						<maml:para>The SQL query based on which the table definition is generated.</maml:para>
+					</maml:description>
+					<command:parametervalue variablelength="true" required="true">System.String</command:parametervalue>
+				</command:parameter>
+				<command:parameter aliases="" pipelineinput="True" globbing="false" variablelength="true" required="true">
+					<maml:name>OutputName</maml:name>
+					<maml:description>
+						<maml:para>The name of the table to be generated.</maml:para>
+					</maml:description>
+					<command:parametervalue variablelength="true" required="true">System.String</command:parametervalue>
+				</command:parameter>
+				<command:parameter aliases="" pipelineinput="True" globbing="false" variablelength="true" required="false">
+					<maml:name>GeneratePrimaryKey</maml:name>
+					<maml:description>
+						<maml:para>Specifies if primary key definition is generated.</maml:para>
+					</maml:description>
+					<command:parametervalue variablelength="true" required="true">SwitchParameter</command:parametervalue>
+				</command:parameter>
+				<command:parameter aliases="" pipelineinput="True" globbing="false" variablelength="true" required="false">
+					<maml:name>PrimaryKeyName</maml:name>
+					<maml:description>
+						<maml:para>Specifies primary key name.</maml:para>
+					</maml:description>
+					<command:parametervalue variablelength="true" required="true">System.String</command:parametervalue>
+				</command:parameter>
+			</command:syntaxitem>      
+		</command:syntax>
+		
+		<command:parameters>
+			<command:parameter required="true" globbing="false" pipelineinput="true" position="0">
+				<maml:name>ConnectionString</maml:name>
+				<dev:type>System.String</dev:type>
+				<maml:description>
+					<maml:para>Connection string to the SQL Server. The intial catalog value of the connection string should be set to the required database.</maml:para>
+				</maml:description>
+			</command:parameter>
+
+			<command:parameter required="true" globbing="false" pipelineinput="true" position="1">
+				<maml:name>Query</maml:name>
+				<dev:type>System.String</dev:type>
+				<maml:description>
+					<maml:para>The SQL query based on which the table definition is generated.</maml:para>
+				</maml:description>
+			</command:parameter>
+
+			<command:parameter required="true" globbing="false" pipelineinput="true" position="2">
+				<maml:name>OutputName</maml:name>
+				<dev:type>System.String</dev:type>
+				<maml:description>
+					<maml:para>The name of the table to be generated.</maml:para>
+				</maml:description>
+			</command:parameter>
+
+			<command:parameter required="false" globbing="false" pipelineinput="true" position="3">
+				<maml:name>GeneratePrimaryKey</maml:name>
+				<dev:type>SwitchParameter</dev:type>
+				<maml:description>
+					<maml:para>Specifies if primary key definition is generated.</maml:para>
+				</maml:description>
+				<dev:defaultvalue>False</dev:defaultvalue>
+			</command:parameter>
+
+			<command:parameter required="false" globbing="false" pipelineinput="true" position="4">
+				<maml:name>PrimaryKeyName</maml:name>
+				<dev:type>System.String</dev:type>
+				<maml:description>
+					<maml:para>Specifies primary key name.</maml:para>
+				</maml:description>			
+			</command:parameter>
+		</command:parameters>
+		
+		<command:returnvalues>
+			<command:returnvalue>
+				<dev:type>
+					<maml:name>String</maml:name>        
+				</dev:type>
+			</command:returnvalue>
+		</command:returnvalues>    
+    
+		<command:examples>
+			<command:example>
+				<maml:title>--- Example 1 ---</maml:title>
+				<maml:introduction>
+				  <maml:param>Generating a table based on the output of a simple select query.</maml:param>
+				</maml:introduction>
+				<dev:code>
+					PS C:\&gt;Get-TableSql -ConnectionString "Server=localhost\SQL2017;Integrated Security=true;Initial Catalog=AdventureWorks2017" -Query "select BusinessEntityId, FirstName, MiddleName, LastName, ModifiedDate from Person.Person;" -OutputName "MyTable" -GeneratePrimaryKey
+				</dev:code>
+				<dev:remarks>
+					<maml:para>
+						The output generated is:
+	create table MyTable
+	(
+		BusinessEntityId int PRIMARY KEY NOT NULL,
+		FirstName nvarchar(50) NOT NULL,
+		MiddleName nvarchar(50) NULL,
+		LastName nvarchar(50) NOT NULL,
+		ModifiedDate datetime NOT NULL
+	);
+					</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>--- Example 2 ---</maml:title>
+				<maml:introduction>
+					<maml:param>Using positional parameters to generate a temporary table without primary key information.</maml:param>
+				</maml:introduction>
+				<dev:code>
+					PS C:\&gt;Get-TableSql "Server=localhost\SQL2017;Integrated Security=true;Initial Catalog=AdventureWorks2017" "select BusinessEntityId, FirstName, MiddleName, LastName from Person.Person;" -OutputName "#TempTable"
+				</dev:code>
+				<dev:remarks>
+					<maml:para>
+						Generates the following sql:
+	create table #TempTable
+	(
+		BusinessEntityId int NOT NULL,
+		FirstName nvarchar(50) NOT NULL,
+		MiddleName nvarchar(50) NULL,
+		LastName nvarchar(50) NOT NULL
+	);
+					</maml:para>
+				</dev:remarks>
+			</command:example>
+		</command:examples>
+		
+		<maml:relatedlinks>
+			<maml:navigationlink>
+				<maml:linktext>Explanation can be found at</maml:linktext>
+				<maml:uri>http://sbytestream.pythonanywhere.com</maml:uri>
+			</maml:navigationlink>
+		</maml:relatedlinks>
+	</command:command>
+
+	<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+		<command:details>
+			<command:name>Get-TableVariableSql</command:name>
+			<maml:description>
+				<maml:para>Generates a table variable definiton based on the output of a query. The name of the table variable depends on the value specified using the OutputName.</maml:para>
+			</maml:description>
+			<command:verb>Get</command:verb>
+			<command:noun>TableVariableSql</command:noun>
+		</command:details>
+
+		<command:syntax>
+			<command:syntaxitem>
+				<maml:name>Get-TableVariableSql</maml:name>
+				<command:parameter aliases="" pipelineinput="True" globbing="false" variablelength="true" required="true">
+					<maml:name>ConnectionString</maml:name>
+					<maml:description>
+						<maml:para>Connection string to the SQL Server.</maml:para>
+					</maml:description>
+					<command:parametervalue variablelength="true" required="true">System.String</command:parametervalue>
+				</command:parameter>
+				<command:parameter aliases="" pipelineinput="True" globbing="false" variablelength="true" required="true">
+					<maml:name>Query</maml:name>
+					<maml:description>
+						<maml:para>The SQL query based on which the table definition is generated.</maml:para>
+					</maml:description>
+					<command:parametervalue variablelength="true" required="true">System.String</command:parametervalue>
+				</command:parameter>
+				<command:parameter aliases="" pipelineinput="True" globbing="false" variablelength="true" required="true">
+					<maml:name>OutputName</maml:name>
+					<maml:description>
+						<maml:para>The name of the table to be generated.</maml:para>
+					</maml:description>
+					<command:parametervalue variablelength="true" required="true">System.String</command:parametervalue>
+				</command:parameter>
+				<command:parameter aliases="" pipelineinput="True" globbing="false" variablelength="true" required="false">
+					<maml:name>GeneratePrimaryKey</maml:name>
+					<maml:description>
+						<maml:para>Specifies if primary key definition is generated.</maml:para>
+					</maml:description>
+					<command:parametervalue variablelength="true" required="true">SwitchParameter</command:parametervalue>
+				</command:parameter>
+				<command:parameter aliases="" pipelineinput="True" globbing="false" variablelength="true" required="false">
+					<maml:name>PrimaryKeyName</maml:name>
+					<maml:description>
+						<maml:para>Specifies primary key name.</maml:para>
+					</maml:description>
+					<command:parametervalue variablelength="true" required="true">System.String</command:parametervalue>
+				</command:parameter>
+			</command:syntaxitem>
+		</command:syntax>
+
+		<command:parameters>
+			<command:parameter required="true" globbing="false" pipelineinput="true" position="0">
+				<maml:name>ConnectionString</maml:name>
+				<dev:type>System.String</dev:type>
+				<maml:description>
+					<maml:para>Connection string to the SQL Server. The intial catalog value of the connection string should be set to the required database.</maml:para>
+				</maml:description>
+			</command:parameter>
+
+			<command:parameter required="true" globbing="false" pipelineinput="true" position="1">
+				<maml:name>Query</maml:name>
+				<dev:type>System.String</dev:type>
+				<maml:description>
+					<maml:para>The SQL query based on which the table definition is generated.</maml:para>
+				</maml:description>
+			</command:parameter>
+
+			<command:parameter required="true" globbing="false" pipelineinput="true" position="2">
+				<maml:name>OutputName</maml:name>
+				<dev:type>System.String</dev:type>
+				<maml:description>
+					<maml:para>The name of the table variable to be generated.</maml:para>
+				</maml:description>
+			</command:parameter>
+
+			<command:parameter required="false" globbing="false" pipelineinput="true" position="3">
+				<maml:name>GeneratePrimaryKey</maml:name>
+				<dev:type>SwitchParameter</dev:type>
+				<maml:description>
+					<maml:para>Specifies if primary key definition is generated.</maml:para>
+				</maml:description>
+				<dev:defaultvalue>False</dev:defaultvalue>
+			</command:parameter>
+
+			<command:parameter required="false" globbing="false" pipelineinput="true" position="4">
+				<maml:name>PrimaryKeyName</maml:name>
+				<dev:type>System.String</dev:type>
+				<maml:description>
+					<maml:para>Specifies primary key name.</maml:para>
+				</maml:description>
+			</command:parameter>
+		</command:parameters>
+
+		<command:returnvalues>
+			<command:returnvalue>
+				<dev:type>
+					<maml:name>String</maml:name>
+				</dev:type>
+			</command:returnvalue>
+		</command:returnvalues>
+
+		<command:examples>
+			<command:example>
+				<maml:title>--- Example 1 ---</maml:title>
+				<maml:introduction>
+					<maml:param>Generating a table variablle based on the output of a simple select query.</maml:param>
+				</maml:introduction>
+				<dev:code>
+					PS C:\&gt;Get-TableVariableSql -ConnectionString "Server=localhost\SQL2017;Integrated Security=true;Initial Catalog=AdventureWorks2017" -Query "select BusinessEntityId, FirstName, MiddleName, LastName, ModifiedDate from Person.Person;" -OutputName "@StudentTable" -GeneratePrimaryKey
+				</dev:code>
+				<dev:remarks>
+					<maml:para>
+						The output generated is:
+	declare @StudentTable table
+	(
+		BusinessEntityId int PRIMARY KEY NOT NULL,
+		FirstName nvarchar(50) NOT NULL,
+		MiddleName nvarchar(50) NULL,
+		LastName nvarchar(50) NOT NULL,
+		ModifiedDate datetime NOT NULL
+	);
+					</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>--- Example 2 ---</maml:title>
+				<maml:introduction>
+					<maml:param>Using positional parameters to generate a temporary table without primary key information from the output of a stored procedure.</maml:param>
+				</maml:introduction>
+				<dev:code>
+					PS C:\&gt;Get-TableVariableSql "Server=localhost\SQL2017;Integrated Security=true;Initial Catalog=AdventureWorks2017" "exec usp_get_persons @biz_entity_id=1" -OutputName "@MyTable"
+				</dev:code>
+				<dev:remarks>
+					<maml:para>
+						Generates the following sql:
+	declare @MyTable table
+	(
+		BusinessEntityId int NOT NULL,
+		FirstName nvarchar(50) NOT NULL,
+		MiddleName nvarchar(50) NULL,
+		LastName nvarchar(50) NOT NULL,
+		ModifiedDate datetime NOT NULL
+	);
+					</maml:para>
+				</dev:remarks>
+			</command:example>
+		</command:examples>
+		
+		<maml:relatedlinks>
+			<maml:navigationlink>
+				<maml:linktext>Explanation can be found at</maml:linktext>
+				<maml:uri>http://sbytestream.pythonanywhere.com</maml:uri>
+			</maml:navigationlink>
+		</maml:relatedlinks>
+	</command:command>
+</helpitems>

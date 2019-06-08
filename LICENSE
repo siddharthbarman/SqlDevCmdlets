@@ -1,4 +1,4 @@
-MIT License
+Usage License
 
 Copyright (c) 2019 Siddharth Barman
 
@@ -11,6 +11,11 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
+
+Any software created using the provided source-code should include information
+about the original author of this source-code which is Siddharth Barman. This
+information should be mentioned in appropriate location like 'read me' or 
+'help' or section dealing with 3rd party software in the product documentation. 
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
